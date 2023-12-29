@@ -8,16 +8,16 @@ export default {
 
         let queuetxt = '';
 
-        for (let i = 1; i < serverQueue.songs.length; i++) {
+        for (let i = 0; i < serverQueue.songs.length; i++) {
             let minutes = `${Math.floor(serverQueue.songs[i].duration / 60)}`;
             if (minutes.length === 1) minutes = '0' + minutes;
             let seconds = `${serverQueue.songs[i].duration % 60}`;
             if (seconds.length === 1) seconds = '0' + seconds;
 
-            if (serverQueue.loop === true && i === 0) queuetxt += `\`\`${i + 1}. (${minutes}:${seconds}) 🔄 ${serverQueue.songs[i].title} requested by ${serverQueue.songs[i].requestedby}\`\`\n`;
-            else queuetxt += `\`\`${i + 1}. (${minutes}:${seconds}) ${serverQueue.songs[i].title} requested by ${serverQueue.songs[i].requestedby}\`\`\n`;
+            if (serverQueue.loop === true && i === 0) queuetxt += `${i + 1}. 🔄 \`${serverQueue.songs[i].title}\` (**${minutes}:${seconds}**) [requested by **@${serverQueue.songs[i].requestedby}**]\n`;
+            else queuetxt += `${i + 1}. \`${serverQueue.songs[i].title}\` (**${minutes}:${seconds}**) [requested by **@${serverQueue.songs[i].requestedby}**]\n`;
         };
 
-        return message.channel.send(strings.musicsQueued + '\n' + queuetxt);
+        return message.channel.send(strings.queueTitle + '\n' + queuetxt);
     }
 };

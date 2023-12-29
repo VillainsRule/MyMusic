@@ -16,6 +16,8 @@ export default {
     playMissingVC: `:woozy_face: **You need to be in a VC.** How else do I know where to play?`,
     addedtoQueue: `:partying_face: **Added to queue:** ||SONG_TITLE|| ([link](||URL||))`,
 
+    queueTitle: `## **:thinking: Song Queue**`,
+
     nothingToSkip: `:woozy_face: **There's nothing to skip.**`,
     skipped: `:disappointed_relieved: **Skipped that song.** I hope it wasn't too bad.`,
 
