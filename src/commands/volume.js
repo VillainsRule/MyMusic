@@ -2,7 +2,7 @@ import strings from '../../strings.js';
 
 export default {
     names: ['volume', 'vol', 'v'],
-    execute: async (client, message, args) => {
+    execute: async (message, args) => {
         const serverQueue = queue.get('queue');
         if (!serverQueue) return message.channel.send(strings.volumeNothingPlaying);
 

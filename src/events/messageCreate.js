@@ -9,5 +9,5 @@ export default async (client, message) => {
     
     const comamndData = client.commands.get(command);
     if (!comamndData) return;
-    comamndData.execute(client, message, args);
+    comamndData.execute(message, args);
 };

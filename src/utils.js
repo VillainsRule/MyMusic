@@ -23,7 +23,7 @@ let play = (song) => {
 
     player.play(resource);
 
-    player.addListener('stateChange', (oldOne, newOne) => {
+    player.addListener('stateChange', (_, newOne) => {
         if (newOne.status == 'idle') {
             if (serverQueue.songs[0]) console.log(`Finished playing the music : ${serverQueue.songs[0].title}`);
             else console.log(`Finished playing all musics, no more musics in the queue`);
@@ -33,36 +33,32 @@ let play = (song) => {
         };
     });
 
-    player.on('error', error => {
-        console.log(error)
-    });
+    player.on('error', (error) => console.log(error));
 
     serverQueue.connection._state.subscription.player._state.resource.volume.setVolumeLogarithmic(serverQueue.volume / 5);
 };
 
 export default {
-    isURL: function (url) {
+    isURL: (url) => {
         if (!url) return false;
-        var pattern = new RegExp('^(https?:\\/\\/)?' +
+        return new RegExp('^(https?:\\/\\/)?' +
             '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' +
             '((\\d{1,3}\\.){3}\\d{1,3}))|' +
             'localhost' +
             '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' +
             '(\\?[;&a-z\\d%_.~+=-]*)?' +
-            '(\\#[-a-z\\d_]*)?$', 'i');
-        return pattern.test(url);
+            '(\\#[-a-z\\d_]*)?$', 'i').test(url);
     },
-    getUrl: async (words) => {
-        return await new Promise(async (resolve) => {
-            YouTube.search(words.join(' '), { limit: 1 }).then(result => resolve('https://www.youtube.com/watch?v=' + result[0].id));
-        });
-    },
+
+    getUrl: async (words) => await new Promise(async (resolve) => {
+        YouTube.search(words.join(' '), { limit: 1 }).then(result => resolve('https://www.youtube.com/watch?v=' + result[0].id));
+    }),
+
     play,
-    joinVChannel: function (voiceChannel) {
-        return joinVoiceChannel({
-            channelId: voiceChannel.id,
-            guildId: voiceChannel.guild.id,
-            adapterCreator: voiceChannel.guild.voiceAdapterCreator,
-        });
-    }
+
+    joinVoice: (voiceChannel) => joinVoiceChannel({
+        channelId: voiceChannel.id,
+        guildId: voiceChannel.guild.id,
+        adapterCreator: voiceChannel.guild.voiceAdapterCreator
+    })
 }

@@ -3,8 +3,8 @@ export default (client) => {
 
     client.user.setPresence({
         activities: [{
-            name: '.gg/interstellar',
-            type: 'WATCHING'
+            name: 'Music!',
+            type: 'PLAYING'
         }],
         status: 'dnd'
     });

@@ -3,7 +3,7 @@ import utils from '../utils.js';
 
 export default {
     names: ['join', 'j', 'switch'],
-    execute: async (client, message, args) => {
+    execute: async (message) => {
         let voiceChannel = message.member.voice.channel;
         let serverQueue = queue.get('queue');
 
@@ -13,7 +13,7 @@ export default {
         if (serverQueue.voiceChannel.guild.id !== voiceChannel.guild.id) {
             utils.play(serverQueue.songs[0]);
 
-            songs = [];
+            let songs = [];
             for (i = 0; i < serverQueue.songs.length; i++) songs.push(serverQueue.songs[0]);
 
             await serverQueue.connection._state.subscription.player.stop();
@@ -22,7 +22,7 @@ export default {
                 textchannel: message.channel,
                 voiceChannel: voiceChannel,
                 connection: null,
-                songs: songs,
+                songs,
                 volume: serverQueue.volume,
                 playing: true,
                 loop: serverQueue.loop,
@@ -30,10 +30,10 @@ export default {
             };
 
             queue.set('queue', queueConstruct);
-            queueConstruct.connection = utils.joinVChannel(voiceChannel);
+            queueConstruct.connection = utils.joinVoice(voiceChannel);
 
             utils.play(queueConstruct.songs[0]);
-        } else serverQueue.connection = utils.joinVChannel(voiceChannel);
+        } else serverQueue.connection = utils.joinVoice(voiceChannel);
 
         return message.channel.send(strings.joined);
     }

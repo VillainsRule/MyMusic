@@ -2,7 +2,7 @@ import strings from '../../strings.js';
 
 export default {
     names: ['stop', 's'],
-    execute: async (client, message, args) => {
+    execute: async (message) => {
         const serverQueue = queue.get('queue');
         if (!serverQueue) return message.channel.send(strings.nothingToStop);
 

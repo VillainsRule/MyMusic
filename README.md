@@ -1,5 +1,5 @@
 <div align="center">
-    <img src="https://cdn.discordapp.com/avatars/1136787113711509524/d4311f33a752856014e3d63ea0223874.webp?size=1024" width="300">
+    <img src="https://i.imgur.com/rQVPAor.png" width="350">
     <h1>MyMusic</h1>
     <h3>The best Discord.JS music selfbot.</h3>
 </div>
@@ -7,7 +7,7 @@
 <br>
 <h2 align="center">Setup</h2>
 
-1. Clone the repository from Git and CD into the folder.
+1. Clone the repository from Git.
 2. Install dependencies: `npm i`.
 3. Customize `config.js` with the configuration.
    - The prefix & token are obvious.

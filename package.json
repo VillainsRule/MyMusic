@@ -1,18 +1,15 @@
 {
     "name": "mymusic",
-    "description": "The best Discord.JS music selfbot.",
-    "main": "src/main.js",
-    "author": "@xthonk",
     "type": "module",
     "scripts": {
-        "start": "node .",
-        "dev": "nodemon ."
+        "start": "node src/main.js",
+        "dev": "nodemon -e '.js' src/main.js"
     },
     "dependencies": {
-        "discord-player": "^6.6.6",
-        "discord.js-selfbot-v13": "^2.15.0",
-        "enmap": "^5.9.8",
-        "youtube-sr": "^4.3.4",
+        "@discordjs/voice": "^0.17.0",
+        "discord-player": "^6.6.8",
+        "discord.js-selfbot-v13": "^2.15.1",
+        "youtube-sr": "^4.3.11",
         "ytdl-core": "^4.11.5"
     },
     "devDependencies": {

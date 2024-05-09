@@ -2,7 +2,7 @@ import strings from '../../strings.js';
 
 export default {
     names: ['queue', 'q'],
-    execute: async (client, message, args) => {
+    execute: async (message) => {
         const serverQueue = queue.get('queue');
         if (!serverQueue || !serverQueue.songs) return message.channel.send(strings.noSongsQueued);
 
