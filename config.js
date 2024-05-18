@@ -10,5 +10,6 @@ export default {
         'ID1',
         'ID2',
         'ID3'
-    ]
+    ],
+    frontend: 'youtube.com'
 };

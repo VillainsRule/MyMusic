@@ -2,7 +2,7 @@ import YouTube from 'youtube-sr';
 import ytdl from 'ytdl-core';
 import { createAudioResource, createAudioPlayer, joinVoiceChannel } from '@discordjs/voice';
 
-let play = (song) => {
+let play = (song, queue) => {
     const serverQueue = queue.get('queue');
 
     if (!song) {
@@ -51,7 +51,7 @@ export default {
     },
 
     getUrl: async (words) => await new Promise(async (resolve) => {
-        YouTube.search(words.join(' '), { limit: 1 }).then(result => resolve('https://www.youtube.com/watch?v=' + result[0].id));
+        YouTube.default.search(words.join(' '), { limit: 1 }).then(result => resolve('https://www.youtube.com/watch?v=' + result[0].id));
     }),
 
     play,

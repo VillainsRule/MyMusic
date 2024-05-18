@@ -3,9 +3,9 @@ import utils from '../utils.js';
 
 export default {
     names: ['join', 'j', 'switch'],
-    execute: async (message) => {
+    execute: async (message, client) => {
         let voiceChannel = message.member.voice.channel;
-        let serverQueue = queue.get('queue');
+        let serverQueue = client.queue.get('queue');
 
         if (!voiceChannel) return message.channel.send(strings.joinMissingVC);
         if (!serverQueue) return message.channel.send(strings.joinError);

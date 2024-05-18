@@ -1,3 +1,8 @@
+const { emit: originalEmit } = process;
+process.emit = function (event, error) {
+    return event === 'warning' && error.name === 'DeprecationWarning' ? false : originalEmit.apply(process, arguments);
+};
+
 import { Client, Collection } from 'discord.js-selfbot-v13';
 import { Player } from 'discord-player';
 import fs from 'fs';
@@ -6,7 +11,7 @@ import config from '../config.js';
 
 const client = new Client({ checkUpdate: false });
 
-global.queue = new Map();
+client.queue = new Map();
 client.commands = new Collection();
 
 client.player = new Player(client, {

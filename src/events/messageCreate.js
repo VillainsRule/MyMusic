@@ -6,8 +6,8 @@ export default async (client, message) => {
 
     const args = message.content.slice(config.prefix.length).trim().split(/ +/g);
     const command = args.shift().toLowerCase();
-    
+
     const comamndData = client.commands.get(command);
     if (!comamndData) return;
-    comamndData.execute(message, args);
+    comamndData.execute(message, client, args);
 };

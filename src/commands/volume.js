@@ -2,8 +2,8 @@ import strings from '../../strings.js';
 
 export default {
     names: ['volume', 'vol', 'v'],
-    execute: async (message, args) => {
-        const serverQueue = queue.get('queue');
+    execute: async (message, client, args) => {
+        const serverQueue = client.queue.get('queue');
         if (!serverQueue) return message.channel.send(strings.volumeNothingPlaying);
 
         if (args.length === 0) return message.channel.send(strings.missingVolume);
@@ -17,6 +17,6 @@ export default {
         serverQueue.connection._state.subscription.player._state.resource.volume.setVolumeLogarithmic(100 / 5);
         serverQueue.connection._state.subscription.player._state.resource.volume.setVolumeLogarithmic(floatVolume / 5);
 
-        message.channel.send(strings.volumeSet.replace('||VOLUME||', args[0]));
+        message.channel.send(strings.volumeSet.replace('{{VOLUME}}', args[0]));
     }
 };

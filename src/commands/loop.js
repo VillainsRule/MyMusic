@@ -2,12 +2,11 @@ import strings from '../../strings.js';
 
 export default {
     names: ['loop', 'l'],
-    execute: async (message) => {
-        const serverQueue = queue.get('queue');
+    execute: async (message, client) => {
+        const serverQueue = client.queue.get('queue');
 
-        if (!serverQueue) return message.channel.send(strings.noSongToLoop);
-
-        if (!serverQueue.loop) {
+        if (!serverQueue) message.channel.send(strings.noSongToLoop);
+        else if (!serverQueue.loop) {
             serverQueue.loop = true;
             message.channel.send(strings.loopEnabled);
         } else {
