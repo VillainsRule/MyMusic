@@ -1,7 +1,9 @@
 # node
-node_modules/
-package-lock.json
-bun.lockb
+node_modules
+bun.lock
+
+# protected
+.env
 
 # mac conf
-**/.DS_Store
+.DS_Store

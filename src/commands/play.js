@@ -1,5 +1,3 @@
-import ytdl from 'ytdl-core';
-import config from '../../config.js';
 import strings from '../../strings.js';
 import utils from '../utils.js';
 
@@ -10,18 +8,16 @@ export default {
 
         message.channel.send(strings.loadingSong);
 
-        let videoLink;
-        if (utils.isURL(args[0])) videoLink = args[0];
-        else videoLink = await utils.getUrl(args);
-
         let voiceChannel = message.member.voice.channel;
         let serverQueue = client.queue.get('queue');
-        let songInfo = await ytdl.getBasicInfo(videoLink);
+
+        let songInfo = await utils.searchFor(args.join(' '));
 
         const song = {
-            title: songInfo.videoDetails.title,
-            duration: songInfo.videoDetails.lengthSeconds,
-            url: videoLink,
+            title: songInfo.data.name,
+            duration: songInfo.data.duration.totalMilliseconds / 1000,
+            id: songInfo.data.id,
+            url: `https://open.spotify.com/track/${songInfo.data.id}`,
             requestedby: message.author.username
         };
 
@@ -37,22 +33,22 @@ export default {
                 skipped: false
             };
 
-            queue.set('queue', queueConstruct);
+            client.queue.set('queue', queueConstruct);
             queueConstruct.songs.push(song);
 
             if (voiceChannel !== null) {
-                message.channel.send(strings.playing.replace('{{SONG_TITLE}}', song.title).replace('{{URL}}', song.url).replace('www.youtube.com', config.frontend));
+                message.channel.send(strings.playing.replace('{{SONG_TITLE}}', song.title).replace('{{URL}}', song.url));
 
                 const connection = utils.joinVoice(voiceChannel);
                 queueConstruct.connection = connection;
-                utils.play(queueConstruct.songs[0]);
+                utils.play(queueConstruct.songs[0], client.queue);
             } else {
-                queue.delete('queue');
+                client.queue.delete('queue');
                 message.channel.send(strings.playMissingVC);
             };
         } else {
             serverQueue.songs.push(song);
-            message.channel.send(strings.addedtoQueue.replace('{{SONG_TITLE}}', song.title).replace('{{URL}}', song.url).replace('www.youtube.com', config.frontend));
+            message.channel.send(strings.addedtoQueue.replace('{{SONG_TITLE}}', song.title).replace('{{URL}}', song.url));
         };
     }
 };

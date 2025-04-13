@@ -1,8 +1,10 @@
-import YouTube from 'youtube-sr';
-import ytdl from 'ytdl-core';
 import { createAudioResource, createAudioPlayer, joinVoiceChannel } from '@discordjs/voice';
+import { Readable } from 'node:stream';
+import Spotify from 'searchtify';
 
-let play = (song, queue) => {
+const spotify = new Spotify();
+
+let play = async (song, queue) => {
     const serverQueue = queue.get('queue');
 
     if (!song) {
@@ -10,13 +12,32 @@ let play = (song, queue) => {
         return queue.delete('queue');
     };
 
-    let resource = createAudioResource(ytdl(song.url, {
-        filter: 'audioonly',
-        quality: 'highestaudio',
-        highWaterMark: 1 << 25
-    }), {
-        inlineVolume: true
+    let a = await fetch('https://spowload.com/spotify/track-' + song.id);
+    let b = await a.text();
+
+    let csrf = b.match(/"csrf-token" content="(.*?)"/)[1];
+
+    let cookies = a.headers.getSetCookie();
+    let cookie = cookies.map(c => c.split(';')[0]).join('; ');
+
+    let r = await fetch('https://spowload.com/convert', {
+        headers: {
+            'content-type': 'application/json',
+            'x-csrf-token': csrf,
+            'cookie': cookie,
+            'Referer': 'https://spowload.com/spotify/track-' + song.id,
+            'Referrer-Policy': 'strict-origin-when-cross-origin'
+        },
+        body: JSON.stringify({ urls: 'https://open.spotify.com/track/' + song.id }),
+        method: 'POST'
     });
+
+    let body = await r.json();
+
+    let mp3 = await fetch(body.url);
+
+    const resource = createAudioResource(Readable.fromWeb(mp3.body), { inlineVolume: true });
+    global.client.resource = resource;
 
     const player = createAudioPlayer();
     serverQueue.connection.subscribe(player);
@@ -29,13 +50,13 @@ let play = (song, queue) => {
             else console.log(`Finished playing all musics, no more musics in the queue`);
             if (serverQueue.loop === false || serverQueue.skipped === true) serverQueue.songs.shift();
             if (serverQueue.skipped === true) serverQueue.skipped = false;
-            play(serverQueue.songs[0]);
+            play(serverQueue.songs[0], queue);
         };
     });
 
     player.on('error', (error) => console.log(error));
 
-    serverQueue.connection._state.subscription.player._state.resource.volume.setVolumeLogarithmic(serverQueue.volume / 5);
+    resource.volume.setVolume(serverQueue.volume / 10);
 };
 
 export default {
@@ -50,8 +71,9 @@ export default {
             '(\\#[-a-z\\d_]*)?$', 'i').test(url);
     },
 
-    getUrl: async (words) => await new Promise(async (resolve) => {
-        YouTube.default.search(words.join(' '), { limit: 1 }).then(result => resolve('https://www.youtube.com/watch?v=' + result[0].id));
+    searchFor: async (args) => await new Promise(async (resolve) => {
+        const query = await spotify.search(args);
+        resolve(query.tracksV2.items[0].item);
     }),
 
     play,

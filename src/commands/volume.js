@@ -14,8 +14,7 @@ export default {
         if (args[0] > 10) return message.channel.send(strings.volumeTooHigh);
 
         serverQueue.volume = floatVolume;
-        serverQueue.connection._state.subscription.player._state.resource.volume.setVolumeLogarithmic(100 / 5);
-        serverQueue.connection._state.subscription.player._state.resource.volume.setVolumeLogarithmic(floatVolume / 5);
+        client.resource.volume.setVolume(floatVolume / 10);
 
         message.channel.send(strings.volumeSet.replace('{{VOLUME}}', args[0]));
     }

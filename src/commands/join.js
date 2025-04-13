@@ -11,7 +11,7 @@ export default {
         if (!serverQueue) return message.channel.send(strings.joinError);
 
         if (serverQueue.voiceChannel.guild.id !== voiceChannel.guild.id) {
-            utils.play(serverQueue.songs[0]);
+            utils.play(serverQueue.songs[0], client.queue);
 
             let songs = [];
             for (i = 0; i < serverQueue.songs.length; i++) songs.push(serverQueue.songs[0]);
@@ -32,7 +32,7 @@ export default {
             queue.set('queue', queueConstruct);
             queueConstruct.connection = utils.joinVoice(voiceChannel);
 
-            utils.play(queueConstruct.songs[0]);
+            utils.play(queueConstruct.songs[0], client.queue);
         } else serverQueue.connection = utils.joinVoice(voiceChannel);
 
         return message.channel.send(strings.joined);
