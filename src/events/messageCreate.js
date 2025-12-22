@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 
 const canRunCommands = (id) => {
-    dotenv.config();
+    dotenv.config({ quiet: false });
 
     const allowed = process.env.ALLOWED.split(',');
     if (allowed.includes(id)) return true;

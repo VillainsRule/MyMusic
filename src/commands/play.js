@@ -1,5 +1,5 @@
 import strings from '../../strings.js';
-import utils from '../utils.js';
+import utils, { downloadIfNotCached } from '../utils.js';
 
 export default {
     names: ['play', 'p'],
@@ -37,11 +37,9 @@ export default {
             queueConstruct.songs.push(song);
 
             if (voiceChannel !== null) {
-                message.channel.send(strings.playing.replace('{{SONG_TITLE}}', song.title).replace('{{URL}}', song.url));
-
                 const connection = utils.joinVoice(voiceChannel);
                 queueConstruct.connection = connection;
-                utils.play(queueConstruct.songs[0], client.queue);
+                utils.play(queueConstruct.songs[0], client.queue, message.channel);
             } else {
                 client.queue.delete('queue');
                 message.channel.send(strings.playMissingVC);
@@ -49,6 +47,7 @@ export default {
         } else {
             serverQueue.songs.push(song);
             message.channel.send(strings.addedtoQueue.replace('{{SONG_TITLE}}', song.title).replace('{{URL}}', song.url));
+            downloadIfNotCached(song, message.channel, true);
         };
     }
 };

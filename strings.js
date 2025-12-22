@@ -12,9 +12,12 @@ export default {
     loopDisabled: `:repeat: **Loop disabled.** You no longer need to hear the same stuff over and over :D`,
 
     missingSong: `:woozy_face: **How am I supposed to know what to play?** Example usage: ${PREFIX}play song title here :V`,
+    downloadingSong: `:pensive: **The provider doesn't have** {{SONG_TITLE}} **cached, so I'm downloading it. This may take a moment...**`,
+    downloadCompleted: `:partying_face: **Download completed for** {{SONG_TITLE}}!`,
     playing: `:partying_face: **Now Playing:** {{SONG_TITLE}} ([link](<{{URL}}>))`,
     playMissingVC: `:woozy_face: **You need to be in a VC.** How else do I know where to play?`,
     addedtoQueue: `:partying_face: **Added to queue:** {{SONG_TITLE}} ([link](<{{URL}}>))`,
+    downloadingAheadOfTime: `:thinking: **Downloading ahead of time:** {{SONG_TITLE}}...`,
     loadingSong: `:thinking: Fetching song...`,
 
     queueTitle: `## **:thinking: Song Queue**`,

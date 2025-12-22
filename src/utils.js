@@ -1,10 +1,33 @@
 import { createAudioResource, createAudioPlayer, joinVoiceChannel } from '@discordjs/voice';
 import { Readable } from 'node:stream';
 import Spotify from 'searchtify';
+import strings from '../strings.js';
 
 const spotify = new Spotify();
 
-let play = async (song, queue) => {
+export const downloadIfNotCached = async (song, channel, isQueue) => {
+    const isDownloadedReq = await fetch('https://spotdown.org/api/check-direct-download?url=https%3A%2F%2Fopen.spotify.com%2Ftrack%2F' + song.id, {
+        headers: {
+            accept: '*/*'
+        }
+    });
+
+    const isDownloadedRes = await isDownloadedReq.json();
+
+    if (!isDownloadedRes.cached) {
+        if (isQueue) channel.send(strings.downloadingAheadOfTime.replace('{{SONG_TITLE}}', song.title));
+        else channel.send(strings.downloadingSong.replace('{{SONG_TITLE}}', song.title));
+
+        await fetch('https://spotdown.org/api/download', {
+            body: JSON.stringify({ url: 'https://open.spotify.com/track/' + song.id }),
+            method: 'POST'
+        });
+
+        if (isQueue) channel.send(strings.downloadCompleted.replace('{{SONG_TITLE}}', song.title));
+    }
+}
+
+const play = async (song, queue, channel) => {
     const serverQueue = queue.get('queue');
 
     if (!song) {
@@ -12,32 +35,15 @@ let play = async (song, queue) => {
         return queue.delete('queue');
     };
 
-    let a = await fetch('https://spowload.com/spotify/track-' + song.id);
-    let b = await a.text();
+    downloadIfNotCached(song, channel, false);
 
-    let csrf = b.match(/"csrf-token" content="(.*?)"/)[1];
-
-    let cookies = a.headers.getSetCookie();
-    let cookie = cookies.map(c => c.split(';')[0]).join('; ');
-
-    let r = await fetch('https://spowload.com/convert', {
-        headers: {
-            'content-type': 'application/json',
-            'x-csrf-token': csrf,
-            'cookie': cookie,
-            'Referer': 'https://spowload.com/spotify/track-' + song.id,
-            'Referrer-Policy': 'strict-origin-when-cross-origin'
-        },
-        body: JSON.stringify({ urls: 'https://open.spotify.com/track/' + song.id }),
-        method: 'POST'
-    });
-
-    let body = await r.json();
-
-    let mp3 = await fetch(body.url);
+    const finalURL = `https://spotdown.org/api/direct-download?url=https%3A%2F%2Fopen.spotify.com%2Ftrack%2F` + song.id;
+    const mp3 = await fetch(finalURL);
 
     const resource = createAudioResource(Readable.fromWeb(mp3.body), { inlineVolume: true });
     global.client.resource = resource;
+
+    if (channel) channel.send(strings.playing.replace('{{SONG_TITLE}}', song.title).replace('{{URL}}', song.url));
 
     const player = createAudioPlayer();
     serverQueue.connection.subscribe(player);
