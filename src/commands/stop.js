@@ -2,7 +2,7 @@ import { getVoiceConnection } from '@discordjs/voice';
 import strings from '../../strings.js';
 
 export default {
-    names: ['stop', 's'],
+    names: ['stop', 'st'],
     execute: async (message, client) => {
         const serverQueue = client.queue.get('queue');
         if (!serverQueue) return message.channel.send(strings.nothingToStop);
