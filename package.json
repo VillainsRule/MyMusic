@@ -7,9 +7,9 @@
     },
     "dependencies": {
         "@discordjs/voice": "^0.18.0",
+        "apple-music": "https://github.com/villainsrule/applemusic",
         "axios": "^1.8.4",
         "discord.js-selfbot-v13": "^3.6.1",
-        "opusscript": "^0.1.1",
-        "searchtify": "latest"
+        "opusscript": "^0.1.1"
     }
 }

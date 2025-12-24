@@ -14,10 +14,10 @@ export default {
         let songInfo = await utils.searchFor(args.join(' '));
 
         const song = {
-            title: songInfo.data.name,
-            duration: songInfo.data.duration.totalMilliseconds / 1000,
-            id: songInfo.data.id,
-            url: `https://open.spotify.com/track/${songInfo.data.id}`,
+            title: songInfo.name,
+            id: songInfo.id,
+            url: songInfo.url,
+            author: songInfo.artist,
             requestedby: message.author.username
         };
 
